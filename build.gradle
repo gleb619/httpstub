@@ -1,30 +1,38 @@
-plugins {
-  id 'groovy'
-  id 'org.springframework.boot' version '2.0.3.RELEASE'
-  id 'io.spring.dependency-management' version '1.0.6.RELEASE'
+buildscript {
+  
+  ext {
+    springBootVersion = '2.0.3.RELEASE'
+  }
+
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+  }
+  
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+version = '1.0.0-SNAPSHOT'
+group = 'org.hidetake.stubyaml'
 
-repositories {
-  jcenter()
-}
+subprojects {
 
-dependencies {
-  implementation 'org.yaml:snakeyaml'
-  implementation 'org.springframework.boot:spring-boot-starter-webflux'
-  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
-  implementation 'org.codehaus.groovy:groovy-all'
-  implementation 'com.google.guava:guava:28.1-jre'
+  apply plugin: 'java'
 
-  compileOnly 'org.projectlombok:lombok:1.18.10'
-  annotationProcessor 'org.projectlombok:lombok:1.18.10'
+  sourceCompatibility = '11'
+  targetCompatibility = '11'
 
-  testImplementation 'org.spockframework:spock-core:1.1-groovy-2.4'
-  testImplementation 'org.spockframework:spock-spring:1.1-groovy-2.4'
-  testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  testRuntimeOnly 'cglib:cglib-nodep:3.2.7'
-  testRuntimeOnly 'org.objenesis:objenesis:2.6'
-  testRuntimeOnly 'org.apache.httpcomponents:httpclient'
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+  }
+
 }
