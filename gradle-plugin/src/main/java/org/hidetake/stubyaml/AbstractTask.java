@@ -3,32 +3,30 @@ package org.hidetake.stubyaml;
 import lombok.Data;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
 
-import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 
 @Data
-public class DefaultAppTask extends DefaultTask {
+public abstract class AbstractTask extends DefaultTask {
 
     @Internal
     protected final Logger log;
 
-    @Input
-    public String lockFileName = ".httpstub.lock";
-    @Input
-    public String adminPrefix = "/admin";
-
-    public DefaultAppTask() {
+    public AbstractTask() {
         super();
         setGroup("httpstub");
         setDescription("Declarative YAML based HTTP stub server for integration tests such as enterprise external APIs");
         log = super.getLogger();
     }
 
-    @Internal
-    protected File getLockFile() {
-        return new File(lockFileName);
+    protected boolean isPortAvailable(String port) {
+        try (Socket ignored = new Socket("127.0.0.1", Integer.valueOf(port))) {
+            return false;
+        } catch (IOException ignored) {
+            return true;
+        }
     }
 
 }

@@ -8,6 +8,7 @@ Key features:
 - Declarative API definition using YAML
 - Template rendering and pattern matching using Groovy
 - File watcher
+- Gradle plugin
 
 
 ## Getting Started
@@ -34,6 +35,20 @@ rules:
           name: Foo
         - id: 2
           name: Bar
+```
+
+Or even simpler, with an old declaration
+
+```yaml
+# data/users.get.yaml
+- response:
+    headers:
+      content-type: application/json
+    body:
+      - id: 1
+        name: Foo
+      - id: 2
+        name: Bar
 ```
 
 Run the application:
@@ -369,6 +384,29 @@ rules:
 ```
 
 Send the request `POST /users` and the stub will return a response after 500 ms.
+
+## Gradle plugin
+
+You can connect this application as a gradle plugin to your's e2e tests or ci.   
+Configure your project as show below
+
+```groovy
+buildscript {
+	dependencies {
+		classpath 'org.hidetake.stubyaml:gradle-plugin:1.0.0-SNAPSHOT'
+	}
+}
+
+apply plugin: 'org.hidetake.stubyaml'
+
+httpstub {
+	serverPort = '8078'  //port where httpstub will run
+	stubData = 'src/test/resources/stubs' //folder where stored configs
+}
+```
+
+`gradle httpstubStart` - to start stub server   
+`gradle httpstubStop` - to stop stub server
 
 ## Versioning
 
