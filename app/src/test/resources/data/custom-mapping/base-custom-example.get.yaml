@@ -1,0 +1,11 @@
+version: v1.1
+rules:
+  - request:
+      path: /api/account
+    response:
+      headers:
+        content-type: application/json
+      body: |
+        {
+          "name": "account1"
+        }
