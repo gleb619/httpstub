@@ -466,8 +466,9 @@ buildscript {
 apply plugin: 'org.hidetake.stubyaml'
 
 httpstub {
-	serverPort = '8078'                   //port where httpstub will run
-	stubData = 'src/test/resources/stubs' //folder where stored configs
+	serverPort = '8078'                   //port where httpstub will run. Required
+	stubData = 'src/test/resources/stubs' //folder where stored configs. Required
+	loggingFile = './httpstub-log.txt'    //log filename, for debugging purposes. Optional 
 }
 ```
 
@@ -477,18 +478,17 @@ httpstub {
 ## Custom path declaration
 
 You can specify the settings for stub in the yaml file. This feature overrides default folder logic.
-For example: if you create a file with the following path `/myfolder/subfolder` and set a customized path `/my/api`.
-Stub will be registered with overridden path `/my/api`. 
-Note: Request method from name with overridden path will be ignored.    
+For example: if you create a file with the following path `/myfolder/subfolder` and set a customized path `/my-new-api`.
+Stub will be registered with overridden path `my-new-api`, file name will be ignored.
 
 ```yaml
-# /myfolder/subfolder/users.get.yaml
+# /myfolder/subfolder/my-old-api.post.yaml <- Filename declaration will be ignored if yaml contains request config
 version: v1.1
 rules:
   - request:
-      path: /my/api
-      method: POST     # Optional, could be empty. By default set GET 
-      relative: true   # Optional, could be empty. By default set to false
+      path: /my-new-api    # Optional, could be empty. By default set to '/'
+      method: POST         # Optional, could be empty. By default set to GET 
+      relative: true       # Optional, could be empty. By default set to false
     response:
       headers:
         content-type: application/json

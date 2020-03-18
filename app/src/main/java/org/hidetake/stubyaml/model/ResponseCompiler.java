@@ -1,17 +1,17 @@
 package org.hidetake.stubyaml.model;
 
 import lombok.RequiredArgsConstructor;
-import org.hidetake.stubyaml.model.execution.CompiledExpression;
 import org.hidetake.stubyaml.model.exception.IllegalRuleException;
+import org.hidetake.stubyaml.model.execution.CompiledExpression;
 import org.hidetake.stubyaml.model.execution.CompiledResponse;
 import org.hidetake.stubyaml.model.execution.CompiledResponseBody;
 import org.hidetake.stubyaml.model.yaml.Response;
 import org.hidetake.stubyaml.model.yaml.RouteSource;
 import org.hidetake.stubyaml.service.ObjectCompiler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.Assert;
 
 import java.time.Duration;
 import java.util.List;
@@ -80,7 +80,7 @@ public class ResponseCompiler implements ObjectCompiler {
         } else {
             final var filenameExpression = expressionCompiler.compileTemplate(file);
             final var baseDirectory = source.getFile().getParentFile();
-            return new CompiledResponseBody.FileBody(filenameExpression, baseDirectory);
+            return new CompiledResponseBody.FileBody(filenameExpression, baseDirectory, expressionCompiler);
         }
     }
 

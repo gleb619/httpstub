@@ -1,7 +1,7 @@
 version: v1.1
 rules:
   - request:
-      path: /api/account/{accountId}
+      path: /account/{accountId}
       method: GET
       relative: true
     response:

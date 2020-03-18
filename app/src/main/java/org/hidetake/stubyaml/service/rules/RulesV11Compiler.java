@@ -6,6 +6,7 @@ import org.hidetake.stubyaml.model.yaml.Rule;
 import org.hidetake.stubyaml.model.yaml.RuleContainer;
 import org.hidetake.stubyaml.model.yaml.Version;
 import org.hidetake.stubyaml.service.YamlParser;
+import org.springframework.util.CollectionUtils;
 import org.yaml.snakeyaml.constructor.ConstructorException;
 
 import java.io.File;
@@ -29,11 +30,12 @@ public abstract class RulesV11Compiler extends RulesV10Compiler {
                 container = yamlParser.parse(file, RuleContainer.WithOneRule.class)
                     .toContainer();
             } catch (ConstructorException skip2) {
+                log.debug("Falling back to previous version of configuration");
                 container = oldCompilation(file, skip);
             }
         }
 
-        if(Objects.isNull(container)) {
+        if(Objects.isNull(container) || CollectionUtils.isEmpty(container.getRules())) {
             throw StubyamlException.of("Container can't be null, file=%s", file.getPath());
         }
 

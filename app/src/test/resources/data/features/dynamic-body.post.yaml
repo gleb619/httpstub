@@ -1,0 +1,4 @@
+- response:
+    headers:
+      content-type: application/json
+    file: dynamic-body.json

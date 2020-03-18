@@ -233,9 +233,9 @@ class StubSpec extends Specification {
     }
 
     @Unroll
-    def 'GET /api/account/#id should be registered from file'() {
+    def 'GET /account/#id should be registered from file'() {
         when:
-        def response = restTemplate.getForEntity("/api/account/$id", Map)
+        def response = restTemplate.getForEntity("/account/$id", Map)
 
         then:
         response.statusCode == HttpStatus.OK
@@ -249,9 +249,9 @@ class StubSpec extends Specification {
     }
 
     @Unroll
-    def 'GET /custom-mapping/api/account/#id should be registered from file'() {
+    def 'GET /custom-mapping/account/#id should be registered from file'() {
         when:
-        def response = restTemplate.getForEntity("/custom-mapping/api/account/$id", Map)
+        def response = restTemplate.getForEntity("/custom-mapping/account/$id", Map)
 
         then:
         response.statusCode == HttpStatus.OK
@@ -264,9 +264,9 @@ class StubSpec extends Specification {
         id << ['1', '2']
     }
 
-    def 'GET /api/accounts should be registered without method'() {
+    def 'GET /accounts should be registered without method'() {
         when:
-        def response = restTemplate.getForEntity('/api/accounts', Map[])
+        def response = restTemplate.getForEntity('/accounts', Map[])
 
         then:
         response.statusCode == HttpStatus.OK
@@ -274,6 +274,41 @@ class StubSpec extends Specification {
         response.body == [['name': 'account1'], ['name': 'account2']]
         response.headers.size() == 2
         ['application/json'] in response.headers.values()
+    }
+
+    def 'GET /custom-mapping/account should be registered with relative empty path'() {
+        when:
+        def response = restTemplate.getForEntity('/custom-mapping/account', Map)
+
+        then:
+        response.statusCode == HttpStatus.OK
+        response.body.size() == 2
+        response.body == ['id': '4', 'name': "account4"]
+        response.headers.size() == 2
+        ['application/json'] in response.headers.values()
+    }
+
+    def 'POST /features/dynamic-body should return body with evaluated expressions'() {
+        given:
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def body = [
+            id: 7
+        ]
+        def request = new HttpEntity(body, headers)
+
+        when:
+        def response = restTemplate.postForEntity("/features/dynamic-body?name=$name", request, Map)
+
+        then:
+        response.statusCode == HttpStatus.OK
+        response.body.size() == 2
+        response.body == ['id': '7', 'title': "$name - the commander of NERV", 'age': '48']
+        response.headers.size() == 2
+        ['application/json'] in response.headers.values()
+
+        where:
+        name << ['Gendo']
     }
 
 }

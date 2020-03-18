@@ -1,7 +1,7 @@
 version: v1.1
 rules:
   - request:
-      path: /api/accounts
+      path: /accounts
     response:
       headers:
         content-type: application/json

@@ -37,7 +37,9 @@ public class CustomRouteSource implements RouteSource {
     }
 
     public String join(String basePath, String path) {
-        return (basePath + "/" + path).replace("//", "/");
+        return (basePath + "/" + path)
+            .replace("//", "/")
+            .replaceAll("/$", "");
     }
 
 }

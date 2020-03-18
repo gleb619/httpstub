@@ -34,7 +34,7 @@ public class RouteSourceParser {
         return CustomRouteSource.builder()
             .source(new FilenameRouteSource(file))
             .relative(Objects.equals(request.getRelative(), Boolean.TRUE))
-            .path(request.getPath())
+            .path(firstNonEmpty(request.getPath(), "/"))
             .method(firstNonEmpty(request.getMethod(), "GET"))
             .type(Route.RouteType.YAML)
             .build();

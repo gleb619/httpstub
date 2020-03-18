@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -64,8 +65,13 @@ public class RouteRegistrar {
     private RouterFunction<ServerResponse> stubResponse(File baseDirectory) throws IOException {
         log.info("Scanning files in {}", baseDirectory.getAbsolutePath());
         final var exceptions = new HashMap<RouteSource, Exception>();
-        final var functions = Files.walk(baseDirectory.toPath())
+        List<Path> files = Files.walk(baseDirectory.toPath())
             .filter(path -> path.toFile().isFile())
+            .collect(Collectors.toList());
+
+        log.info("Found {} files", files.size());
+
+        final var functions = files.stream()
             .map(path -> routeSourceParser.parse(path.toFile()))
             .map(compile(baseDirectory, exceptions))
             .filter(Optional::isPresent)

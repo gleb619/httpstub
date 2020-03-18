@@ -1,13 +1,12 @@
 version: v1.1
 rules:
   - request:
-      path: /account/{accountId}
-      method: GET
+      relative: true
     response:
       headers:
         content-type: application/json
       body: |
         {
-          "id": "${path.accountId}",
-          "name": "account${path.accountId}"
+          "id": "4",
+          "name": "account4"
         }
