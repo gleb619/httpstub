@@ -312,4 +312,29 @@ class StubSpec extends Specification {
         'Gendo' | 7
     }
 
+    def 'POST /features/dynamic-body-without-content-type should return json with evaluated expressions'() {
+        given:
+        def headers = new HttpHeaders()
+        headers.setContentType(MediaType.APPLICATION_JSON)
+        def body = [
+            id: id,
+            count: count
+        ]
+        def request = new HttpEntity(body, headers)
+
+        when:
+        def response = restTemplate.postForEntity("/features/dynamic-body-without-content-type?name=$name", request, Map)
+
+        then:
+        response.statusCode == HttpStatus.OK
+        response.body.size() == 3
+        response.body == ['id': id, 'title': "$name - the commander of NERV", 'age': '49']
+        response.headers.size() == 3
+        ['application/json'] in response.headers.values()
+
+        where:
+        name    | id | count
+        'Gendo' | 7  | 1
+    }
+
 }

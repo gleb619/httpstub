@@ -1,6 +1,7 @@
 package org.hidetake.stubyaml.model.execution;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,10 @@ import static org.hidetake.stubyaml.util.MapUtils.mapValue;
 public interface CompiledResponseBody<T> {
 
     T evaluate(ResponseContext responseContext);
+
+    default HttpHeaders evaluateHeaders(ResponseContext responseContext, HttpHeaders headers) {
+        return new HttpHeaders();
+    }
 
     class NullBody implements CompiledResponseBody<Object> {
         @Override

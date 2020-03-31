@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.hidetake.stubyaml.model.ExpressionCompiler;
 import org.hidetake.stubyaml.model.yaml.FilenameRouteSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.MimeType;
 
 import java.io.File;
@@ -13,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.hidetake.stubyaml.util.StringUtils.firstNonEmpty;
 import static org.springframework.util.ObjectUtils.nullSafeToString;
@@ -56,6 +59,22 @@ public class FileBody implements CompiledResponseBody<File> {
         }
     }
 
+    @Override
+    @SneakyThrows
+    public HttpHeaders evaluateHeaders(ResponseContext responseContext, HttpHeaders headers) {
+        HttpHeaders output = new HttpHeaders();
+        if(Objects.isNull(headers.getContentType())) {
+            MediaType mediaType = parseMediaType(responseContext);
+            if(Objects.nonNull(mediaType)) {
+                output.setContentType(mediaType);
+            }
+        }
+
+        return output;
+    }
+
+    /* ===================== */
+
     private boolean isTextFile(File file) {
         try {
             String type = firstNonEmpty(Files.probeContentType(file.toPath()), "");
@@ -76,7 +95,8 @@ public class FileBody implements CompiledResponseBody<File> {
         CompiledExpression compiledBody = expressionCompiler.compileTemplate(text, source);
         String evaluatedResult = String.valueOf(compiledBody.evaluate(responseContext));
 
-        File tempFile = File.createTempFile(file.getName() + hashcode, null);
+        String originalFileExtension = com.google.common.io.Files.getFileExtension(file.getName());
+        File tempFile = File.createTempFile(file.getName() + "-" + hashcode + "-", "." + originalFileExtension);
         try {
             Files.write(tempFile.toPath(), evaluatedResult.getBytes(StandardCharsets.UTF_8));
         } finally {
@@ -84,6 +104,18 @@ public class FileBody implements CompiledResponseBody<File> {
         }
 
         return tempFile;
+    }
+
+    private MediaType parseMediaType(ResponseContext responseContext) {
+        try {
+            String newHash = Math.abs(responseContext.hashCode()) + "";
+            File compiledFile = cache.get(newHash);
+            String fileType = Files.probeContentType(compiledFile.toPath());
+            MimeType type = MimeType.valueOf(fileType);
+            return new MediaType(type.getType(), type.getSubtype(), type.getParameters());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

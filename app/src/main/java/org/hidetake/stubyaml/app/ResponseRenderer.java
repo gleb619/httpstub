@@ -51,6 +51,9 @@ public class ResponseRenderer {
                 .doOnSuccess(response -> requestResponseLogger.logResponse(response, null));
         } else if (evaluatedBody instanceof File) {
             final var resource = new FileSystemResource((File) evaluatedBody);
+            final var headersFromBody = compiledResponse.getBody().evaluateHeaders(responseContext, headers);
+            responseBuilder.headers(httpHeaders -> httpHeaders.putAll(headersFromBody));
+
             return responseBuilder
                 .body(BodyInserters.fromResource(resource))
                 .doOnSuccess(response -> requestResponseLogger.logResponse(response, resource.toString()));
