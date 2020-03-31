@@ -42,7 +42,7 @@ public class TableCompiler implements ObjectCompiler {
         }
         return CompiledTable.builder()
             .name(table.getName())
-            .keyExpression(expressionCompiler.compileExpression(table.getKey()))
+            .keyExpression(expressionCompiler.compileExpression(table.getKey(), source))
             .values(table.getValues())
             .build();
     }

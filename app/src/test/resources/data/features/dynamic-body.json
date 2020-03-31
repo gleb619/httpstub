@@ -1,5 +1,5 @@
 {
-  "id": ${body.id},
+  "id": ${requestBody.id},
   "title": "${query.name} - the commander of NERV",
-  "age": "${body?.count + 48}"
+  "age": "${(body?.count ?: 0) + 48}"
 }

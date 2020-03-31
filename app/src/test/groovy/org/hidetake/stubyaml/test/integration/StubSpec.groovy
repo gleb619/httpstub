@@ -233,7 +233,7 @@ class StubSpec extends Specification {
     }
 
     @Unroll
-    def 'GET /account/#id should be registered from file'() {
+    def 'GET /account/#id should be registered from yaml declaration'() {
         when:
         def response = restTemplate.getForEntity("/account/$id", Map)
 
@@ -249,7 +249,7 @@ class StubSpec extends Specification {
     }
 
     @Unroll
-    def 'GET /custom-mapping/account/#id should be registered from file'() {
+    def 'GET /custom-mapping/account/#id should be registered from yaml declaration'() {
         when:
         def response = restTemplate.getForEntity("/custom-mapping/account/$id", Map)
 
@@ -264,7 +264,7 @@ class StubSpec extends Specification {
         id << ['1', '2']
     }
 
-    def 'GET /accounts should be registered without method'() {
+    def 'GET /accounts should be registered without method declaration'() {
         when:
         def response = restTemplate.getForEntity('/accounts', Map[])
 
@@ -276,7 +276,7 @@ class StubSpec extends Specification {
         ['application/json'] in response.headers.values()
     }
 
-    def 'GET /custom-mapping/account should be registered with relative empty path'() {
+    def 'GET /custom-mapping/account should be registered without strict path declaration'() {
         when:
         def response = restTemplate.getForEntity('/custom-mapping/account', Map)
 
@@ -293,7 +293,7 @@ class StubSpec extends Specification {
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
         def body = [
-            id: 7
+            id: id
         ]
         def request = new HttpEntity(body, headers)
 
@@ -302,13 +302,14 @@ class StubSpec extends Specification {
 
         then:
         response.statusCode == HttpStatus.OK
-        response.body.size() == 2
-        response.body == ['id': '7', 'title': "$name - the commander of NERV", 'age': '48']
-        response.headers.size() == 2
+        response.body.size() == 3
+        response.body == ['id': id, 'title': "$name - the commander of NERV", 'age': '48']
+        response.headers.size() == 3
         ['application/json'] in response.headers.values()
 
         where:
-        name << ['Gendo']
+        name    | id
+        'Gendo' | 7
     }
 
 }

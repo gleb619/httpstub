@@ -16,7 +16,7 @@ public class RuleCompiler implements ObjectCompiler {
 
     public CompiledRule compile(RouteSource source, Rule rule) {
         return CompiledRule.builder()
-            .when(expressionCompiler.compileExpression(rule.getWhen()))
+            .when(expressionCompiler.compileExpression(rule.getWhen(), source))
             .response(responseCompiler.compile(rule.getResponse(), source))
             .build();
     }

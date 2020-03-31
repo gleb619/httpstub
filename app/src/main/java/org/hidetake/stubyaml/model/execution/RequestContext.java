@@ -25,7 +25,9 @@ public class RequestContext implements Bindable {
         output.put("headers", requestHeaders);
         output.put("path", pathVariables);
         output.put("params", requestParams);
+        output.put("query", requestParams);
         output.put("body", requestBody);
+        output.put("requestBody", requestBody);
         output.put("constants", constants);
 
         return output;

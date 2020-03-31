@@ -259,12 +259,14 @@ Following values are parsed as a Groovy template:
 
 Following variables are available in a script block `${}`.
 
-Variable    | Object
-------------|-------
-`path`      | Path variables
-`headers`   | Request headers
-`params`    | Query parameters
-`body`      | Request body
+Variable      | Object
+------------  |-------
+`path`        | Path variables
+`headers`     | Request headers
+`params`      | Query parameters
+`query`       | Query parameters (alternative name)
+`body`        | Request body
+`requestBody` | Request body (alternative name)
 
 Type of the request body may be one of following:
 
